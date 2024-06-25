@@ -715,3 +715,183 @@
     Chuyển qua server để kiểm tra. User `cuongvv` đã được đồng bộ sang DC.
 
     ![alt text](_img/_4/image-141.png)
+
+# BÀI 5: LÀM VIỆC CÙNG POWERSHELL
+
+## Tạo OU, tài khoản người dùng và nhóm thông qua PowerShell.
+
+![alt text](_img/_5/_1/image.png)
+
+![alt text](_img/_5/_1/image-1.png)
+
+![alt text](_img/_5/_1/image-2.png)
+
+![alt text](_img/_5/_1/image-3.png)
+
+- Thực hiện trên Sever:
+
+    Mở công cụ PowersShell trên thanh Taskbar.
+
+    ![alt text](_img/_5/_1/image-4.png)
+
+    ***Thực hiện các lệnh tạo trong OU:***
+
+    - Di chuyển vào trong ổ C: `cd c:\`.
+
+    - Tạo OU HANOI: `new-ADOrganizationalUnit HANOI`.
+
+        ![alt text](_img/_5/_1/image-5.png)
+
+    - Tạo OU **Technical** thuộc OU **HANOI**: `dsadd ou "ou=Technical,ou=HANOI,dc=bkaptech,dc=vn"`.
+
+        ![alt text](_img/_5/_1/image-6.png)
+
+    - Tạo OU **Sale** thuộc OU **HANOI**: `dsadd ou "ou=Sale,ou=HANOI,dc=bkaptech,dc=vn"`.
+
+        ![alt text](_img/_5/_1/image-7.png)
+
+    - Tạo OU **Marketing** thuộc OU **HANOI**: `dsadd ou "ou=Marketing,ou=HANOI,dc=bkaptech,dc=vn"`.
+
+        ![alt text](_img/_5/_1/image-8.png)
+
+        Kết quả ta sẽ được như sau:
+
+        ![alt text](_img/_5/_1/image-9.png)
+
+    Thực hiện các câu lệnh tạo User:
+
+    - Di chuyển vào trong ổ C: `cd c:\`.
+
+    - Tạo User `hungnq`, `quanch` trong OU **Technical**:
+
+        `New-ADUser -Name hungnq -DisplayName "Nguyen Quoc Hung" -GivenName "Nguyen Quoc" -Surname "Hung" -Path "ou=Technical,ou=HANOI,dc=bkaptech,dc=vn"`,
+
+        `New-ADUser -Name quanch -DisplayName "Chu Hong Quan" -GivenName "Chu Hong" -Surname "Quan" -Path "ou=Technical,ou=HANOI,dc=bkaptech,dc=vn"`.
+
+        Kết quả:
+
+        ![alt text](_img/_5/_1/image-10.png)
+
+        ![alt text](_img/_5/_1/image-11.png)
+
+    - Phòng ban **Sale** :User Lưu Văn Trưởng (`truonglv`) , Lưu Văn Nghĩa (`nghialv`) thuộc nhóm **Sales**.
+
+        `New-ADUser -Name truonglv -DisplayName "Luu Van Truong" -GivenName "Luu Van" -Surname "Truong" -Path "ou=Sale,ou=HANOI,dc=bkaptech,dc=vn"`.
+
+        `New-ADUser -Name nghialv -DisplayName "Luu Van Nghia" -GivenName "Luu Van" -Surname "Nghia" -Path "ou=Sale,ou=HANOI,dc=bkaptech,dc=vn"`.
+
+        Kết quả:
+
+        ![alt text](_img/_5/_1/image-13.png)
+
+        ![alt text](_img/_5/_1/image-14.png)
+
+    - Phòng ban **Marketing**: User Nguyễn Tiến Cường (`cuongnt`) thuộc nhóm **Marketings**.
+
+        `New-ADUser -Name congnt -DisplayName "Nguyen Tien Cuong" -GivenName "Nguyen Tien" -Surname "Cuong" -Path "ou=Marketing,ou=HANOI,dc=bkaptech,dc=vn"`.
+
+        Kết quả:
+
+        ![alt text](_img/_5/_1/image-16.png)
+
+        ![alt text](_img/_5/_1/image-15.png)
+
+    **Thực hiện câu lệnh đặt mật khẩu cho tài khoản người dùng:**
+
+    - Đặt mật khẩu cho tài khoản **hungnq**: `set-ADAccountPassword hungnq`.
+
+        ![alt text](_img/_5/_1/image-17.png)
+
+        Làm tương tự với các tài khoản còn lại. (quanch, truonglv, nghialv, congnt).
+
+        `set-ADAccountPassword quanch`.
+
+        `set-ADAccountPassword truonglv`.
+
+        `set-ADAccountPassword nghialv`.
+
+        `set-ADAccountPassword congnt`.
+
+        ![alt text](_img/_5/_1/image-18.png)
+
+    **Thực hiện câu lệnh Enable tài khoản người dùng:**
+
+    - Enable tài khoản hungnq: `enable-ADAccount hungnq`.
+
+        Làm tương tự với các tài khoản còn lại. (quanch, truonglv, nghialv, cuongnt).
+
+        ![alt text](_img/_5/_1/image-19.png)
+
+        `enable-ADAccount quanch`.
+
+        `enable-ADAccount truonglv`.
+
+        `enable-ADAccount nghialv`.
+
+        `enable-ADAccount congnt`.
+
+        ![alt text](_img/_5/_1/image-20.png)
+
+    **Thực hiện câu lệnh tạo Group:**
+
+    - Tạo **Group Technicals** trong **OU Technical**: `New-ADgroup Technicals -Path "ou=Technical,ou=HANOI,dc=bkaptech,dc=vn" Global -GroupCategory Security`
+
+        ![alt text](_img/_5/_1/image-21.png)
+
+        Làm tương tự với các Group còn lại (Marketing, Sale).
+
+        `New-ADgroup Marketings -Path "ou=Marketing,ou=HANOI,dc=bkaptech,dc=vn" Global -GroupCategory Security`.
+
+        `New-ADgroup Sales -Path "ou=Sale,ou=HANOI,dc=bkaptech,dc=vn" Global -GroupCategory Security`.
+
+        ![alt text](_img/_5/_1/image-22.png)
+
+        ![alt text](_img/_5/_1/image-23.png)
+
+        ![alt text](_img/_5/_1/image-24.png)
+
+        ![alt text](_img/_5/_1/image-25.png)
+
+    **Thực hiện câu lệnh gán tài khoản người dùng vào nhóm tương ứng:**
+
+    - Gán tài khoản `hungnq` vào nhóm **Technicals**: `Add-ADGroupMember Technicals -Members hungnq`.
+
+        ![alt text](_img/_5/_1/image-26.png)
+
+        ![alt text](_img/_5/_1/image-27.png)
+
+        Thực hiện gán nốt các thành viên còn lại: (`quanch` trong **Technicals**; `nghialv`, `truongvl` trong **Sales**; `congnt` trong **Marketings**).
+
+        `Add-ADGroupMember Technicals -Members quanch`.
+
+        `Add-ADGroupMember Sales -Members nghialv`.
+
+        `Add-ADGroupMember Sales -Members truonglv`.
+
+        `Add-ADGroupMember Marketings -Members congnt`.
+
+        Kết quả như sau:
+
+        ![alt text](_img/_5/_1/image-28.png)
+
+        ![alt text](_img/_5/_1/image-29.png)
+
+        ![alt text](_img/_5/_1/image-30.png)
+
+        ![alt text](_img/_5/_1/image-31.png)
+    
+    **Thực hiện câu lệnh kiểm tra thông tin nhóm tài khoản:**
+
+    - Kiểm tra thông tin nhóm **Technicals**: `Get-ADGroup Technicals`.
+
+        ![alt text](_img/_5/_1/image-32.png)
+
+        Kiểm tra các nhóm còn lại (**Sales**, **Marketings**).
+
+        `Get-ADGroup Sales`.
+
+        ![alt text](_img/_5/_1/image-33.png)
+
+        `Get-ADGroup Marketings`.
+
+        ![alt text](_img/_5/_1/image-34.png)
